@@ -1,0 +1,12 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+
+package org.dosys.project.presentation.core.util
+
+import kotlinx.coroutines.CoroutineDispatcher
+
+actual object AppDispatchers {
+    actual val Main: CoroutineDispatcher
+        get() = TODO("Not yet implemented")
+    actual val Io: CoroutineDispatcher
+        get() = TODO("Not yet implemented")
+}
