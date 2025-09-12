@@ -7,7 +7,7 @@ import de.jensklingenberg.ktorfit.http.Query
 
 interface GetCurrentAndForecastsWeatherApi {
 
-    @GET("data/3.0/onecall")
+    @GET("/")
     suspend fun getCurrentAndForecastsWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,

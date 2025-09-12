@@ -2,10 +2,12 @@ package com.samsung.weather_data.remote.api
 
 import com.samsung.weather_data.remote.model.GetDailyAggregationDto
 import com.samsung.weather_data.remote.model.type.WeatherUnit
+import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
 
 interface GetDailyAggregationApi {
 
+    @GET("day_summary")
     suspend fun getDailyAggregation(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
