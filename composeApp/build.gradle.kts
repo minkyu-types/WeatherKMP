@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+val abcLocationLib = "com.linecorp.abc:kmm-location:0.2.4"
+val abcNotifications = "com.linecorp.abc:kmm-notifications:0.4.1"
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -32,6 +35,10 @@ kotlin {
             implementation(libs.orbit.compose)
             implementation(libs.ktor.okhttp)
             implementation(libs.koin.android)
+            implementation(libs.androidx.workmanager)
+//            implementation(abcLocationLib)
+            implementation(abcNotifications)
+            api(abcNotifications)
         }
         commonMain.dependencies {
             implementation(project(":composeApp:weather-data"))
@@ -46,6 +53,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(compose.materialIconsExtended)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.koin.annotations)
             implementation(libs.jetpack.navigation)
@@ -56,6 +64,11 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+//            implementation(abcLocationLib)
+            implementation(abcNotifications)
+            implementation(libs.log.kermit)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -63,6 +76,9 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.darwin)
+//            implementation(abcLocationLib)
+            implementation(abcNotifications)
+            api(abcNotifications)
         }
     }
 }
