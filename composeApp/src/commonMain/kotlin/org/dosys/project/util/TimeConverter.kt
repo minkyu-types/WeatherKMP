@@ -1,6 +1,7 @@
 package org.dosys.project.util
 
 import kotlinx.datetime.FixedOffsetTimeZone
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.number
@@ -48,5 +49,19 @@ object TimeConverter {
         val ampm = if (ldt.hour < 12) "am" else "pm"
 
         return "$month ${ldt.day}, $hour12:${ldt.minute.toString().padStart(2, '0')} $ampm"
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun convertUTCToLocalDateTime(
+        utcDateTime: Long,
+        zone: String,
+        zoneOffset: Int
+    ): LocalDateTime {
+        val epochSeconds = if (utcDateTime > 1_000_000_000_000L) utcDateTime / 1000 else utcDateTime
+        val tz: TimeZone = runCatching { TimeZone.of(zone) }
+            .getOrElse { FixedOffsetTimeZone(UtcOffset(seconds = zoneOffset)) }
+        val ldt = Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(tz)
+
+        return ldt
     }
 }
