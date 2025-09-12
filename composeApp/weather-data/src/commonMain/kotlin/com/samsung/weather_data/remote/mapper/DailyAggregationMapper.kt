@@ -1,13 +1,5 @@
 package com.samsung.weather_data.remote.mapper
 
-import com.samsung.weather_data.remote.model.CloudCoverDto
-import com.samsung.weather_data.remote.model.GetDailyAggregationDto
-import com.samsung.weather_data.remote.model.HumidityDto
-import com.samsung.weather_data.remote.model.PrecipitationDto
-import com.samsung.weather_data.remote.model.PressureDto
-import com.samsung.weather_data.remote.model.TemperatureDto
-import com.samsung.weather_data.remote.model.WindDto
-import com.samsung.weather_data.remote.model.WindMaxDto
 import org.dosys.weather_domain.model.CloudCover
 import org.dosys.weather_domain.model.DailyAggregation
 import org.dosys.weather_domain.model.Humidity

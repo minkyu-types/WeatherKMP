@@ -23,9 +23,9 @@ import org.dosys.weather_domain.model.Weather
 class CurrentAndForecastsWeatherMapper {
 
     fun mapToDomain(
-        currentWeatherAndForecastsWeatherDto: GetCurrentAndForecastsWeatherDto
+        currentWeatherModel: GetCurrentAndForecastsWeatherDto
     ): CurrentWeather {
-        with (currentWeatherAndForecastsWeatherDto) {
+        with (currentWeatherModel) {
             return CurrentWeather(
                 location = Location(latitude = latitude, longitude = longitude),
                 timezone = timezone,
@@ -48,7 +48,7 @@ class CurrentAndForecastsWeatherMapper {
                 longitude = location.longitude,
                 timezone = timezone,
                 timezoneOffset = timezoneOffset,
-                current = current.toData(),
+                current = current.toPresentation(),
                 minutely = minutely.map { it.toData() },
                 hourly = hourly.map { it.toData() },
                 daily = daily.map { it.toData() },
@@ -104,7 +104,7 @@ class CurrentAndForecastsWeatherMapper {
             windSpeed = windSpeed,
             windDeg = windDeg,
             windGust = windGust,
-            weather = (weather ?: emptyList()).map { it.toDomain() },
+            weather = weather.map { it.toDomain() },
             pop = pop
         )
 
@@ -125,7 +125,7 @@ class CurrentAndForecastsWeatherMapper {
             windSpeed = windSpeed,
             windDeg = windDeg,
             windGust = windGust,
-            weather = (weather ?: emptyList()).map { it.toDomain() },
+            weather = weather.map { it.toDomain() },
             clouds = clouds,
             pop = pop,
             rain = rain,
@@ -157,10 +157,10 @@ class CurrentAndForecastsWeatherMapper {
             start = start,
             end = end,
             description = description,
-            tags = tags ?: emptyList()
+            tags = tags
         )
 
-    private fun Current.toData(): CurrentDto =
+    private fun Current.toPresentation(): CurrentDto =
         CurrentDto(
             dt = dt,
             sunrise = sunrise,
@@ -235,7 +235,7 @@ class CurrentAndForecastsWeatherMapper {
             uvi = uvi
         )
 
-    private fun Temp.toData(): TempDto =
+    private fun Temp.toData(): TempDto=
         TempDto(
             day = day,
             min = min,
