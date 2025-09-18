@@ -12,10 +12,3 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.androidx.room)
 }
-
-buildscript {
-
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-serialization:${libs.versions.kotlin.get()}")
-    }
-}

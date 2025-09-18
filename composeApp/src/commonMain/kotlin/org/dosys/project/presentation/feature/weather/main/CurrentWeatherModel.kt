@@ -1,109 +1,78 @@
 package org.dosys.project.presentation.feature.weather.main
 
-import org.dosys.weather_domain.model.Location
+import com.samsung.weather_data.remote.model.type.WeatherUnit.TemperatureUnit
 
 data class CurrentWeatherModel(
-    val location: Location,
-    val timezone: String,
-    val timezoneOffset: Int,
-    val current: Current,
-    val minutely: List<Minutely> = emptyList(),
-    val hourly: List<Hourly> = emptyList(),
-    val daily: List<Daily> = emptyList(),
-    val alerts: List<Alert> = emptyList()
-)
-
-data class Current(
+    val coord: CoordModel,
+    val weather: List<WeatherModel>,
+    val base: String,
+    val main: MainModel,
+    val visibility: Int,
+    val wind: WindModel,
+    val rain: RainModel? = null,
+    val clouds: CloudsModel,
     val dt: Long,
-    val sunrise: Long? = null,
-    val sunset: Long? = null,
-    val temp: Double,
-    val feelsLike: Double,
-    val pressure: Int,
-    val humidity: Int,
-    val dewPoint: Double,
-    val uvi: Double,
-    val clouds: Int,
-    val visibility: Int? = null,
-    val windSpeed: Double,
-    val windDeg: Int,
-    val windGust: Double? = null,
-    val weather: List<Weather>
+    val sys: SysModel,
+    val timezone: Int,
+    val id: Long,
+    val name: String,
+    val cod: Int
 )
 
-data class Weather(
+data class CoordModel(
+    val lon: Double,
+    val lat: Double
+)
+
+data class WeatherModel(
     val id: Int,
     val main: String,
     val description: String,
     val icon: String
 )
 
-data class Minutely(
-    val dt: Long,
-    val precipitation: Double
-)
-
-data class Hourly(
-    val dt: Long,
+data class MainModel (
     val temp: Double,
     val feelsLike: Double,
+    val tempMin: Double,
+    val tempMax: Double,
     val pressure: Int,
     val humidity: Int,
-    val dewPoint: Double,
-    val uvi: Double,
-    val clouds: Int,
-    val visibility: Int,
-    val windSpeed: Double,
-    val windDeg: Int,
-    val windGust: Double? = null,
-    val weather: List<Weather>,
-    val pop: Double
+    val seaLevel: Int,
+    val grndLevel: Int
 )
 
-data class Daily(
-    val dt: Long,
+data class WindModel(
+    val speed: Double,
+    val deg: Int,
+    val gust: Double? = null
+)
+
+data class RainModel(
+    val oneHour: Double? = null
+)
+
+data class CloudsModel(
+    val all: Int
+)
+
+data class SysModel(
+    val type: Int? = null,
+    val id: Int? = null,
+    val country: String,
     val sunrise: Long,
-    val sunset: Long,
-    val moonrise: Long,
-    val moonset: Long,
-    val moonPhase: Double,
-    val summary: String? = null,
-    val temp: Temp,
-    val feelsLike: FeelsLike,
-    val pressure: Int,
-    val humidity: Int,
-    val dewPoint: Double,
-    val windSpeed: Double,
-    val windDeg: Int,
-    val windGust: Double? = null,
-    val weather: List<Weather>,
-    val clouds: Int,
-    val pop: Double,
-    val rain: Double? = null,
-    val uvi: Double
+    val sunset: Long
 )
 
-data class Temp(
-    val day: Double,
-    val min: Double,
-    val max: Double,
-    val night: Double,
-    val eve: Double,
-    val morn: Double
-)
-
-data class FeelsLike(
-    val day: Double,
-    val night: Double,
-    val eve: Double,
-    val morn: Double
-)
-
-data class Alert(
-    val senderName: String,
-    val event: String,
-    val start: Long,
-    val end: Long,
-    val description: String,
-    val tags: List<String> = emptyList()
-)
+fun Double.convert(from: TemperatureUnit, to: TemperatureUnit): Double {
+    if (from == to) return this
+    return when (from to to) {
+        TemperatureUnit.CELSIUS to TemperatureUnit.FAHRENHEIT    -> this * 9.0 / 5.0 + 32.0
+        TemperatureUnit.FAHRENHEIT to TemperatureUnit.CELSIUS    -> (this - 32.0) * 5.0 / 9.0
+        TemperatureUnit.KELVIN to TemperatureUnit.CELSIUS        -> this - 273.15
+        TemperatureUnit.CELSIUS to TemperatureUnit.KELVIN        -> this + 273.15
+        TemperatureUnit.KELVIN to TemperatureUnit.FAHRENHEIT     -> (this - 273.15) * 9.0 / 5.0 + 32.0
+        TemperatureUnit.FAHRENHEIT to TemperatureUnit.KELVIN     -> (this - 32.0) * 5.0 / 9.0 + 273.15
+        else -> error("Unsupported conversion")
+    }
+}

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val abcLocationLib = "com.linecorp.abc:kmm-location:0.2.4"
@@ -36,7 +37,7 @@ kotlin {
             implementation(libs.ktor.okhttp)
             implementation(libs.koin.android)
             implementation(libs.androidx.workmanager)
-//            implementation(abcLocationLib)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(abcNotifications)
             api(abcNotifications)
         }
@@ -54,8 +55,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(compose.materialIconsExtended)
             implementation(libs.kotlinx.coroutines.core)
+
             implementation(libs.koin.core)
             implementation(libs.koin.annotations)
+
             implementation(libs.jetpack.navigation)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.encoding)
@@ -66,8 +69,6 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
-//            implementation(abcLocationLib)
-            implementation(abcNotifications)
             implementation(libs.log.kermit)
         }
         commonTest.dependencies {
@@ -76,9 +77,6 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.darwin)
-//            implementation(abcLocationLib)
-            implementation(abcNotifications)
-            api(abcNotifications)
         }
     }
 }

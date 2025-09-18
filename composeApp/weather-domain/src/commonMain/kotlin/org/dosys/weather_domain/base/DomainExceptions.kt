@@ -1,4 +1,4 @@
-package org.dosys.weather_domain
+package org.dosys.weather_domain.base
 
 sealed class DomainException(message: String?, cause: Throwable? = null) : Exception(message, cause) {
     class Network(message: String? = null, cause: Throwable? = null) : DomainException(message, cause)

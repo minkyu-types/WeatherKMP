@@ -3,13 +3,13 @@ package com.samsung.weather_data
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.request.HttpRequestBuilder
 
-object OpenWeatherAppId {
+object OpenWeatherClientPlugin {
     class Config { lateinit var apiKey: String }
 
-    val Plugin = createClientPlugin("OpenWeatherAppId", OpenWeatherAppId::Config) {
+    val Plugin = createClientPlugin("OpenWeatherAppId", OpenWeatherClientPlugin::Config) {
         val key = pluginConfig.apiKey
         onRequest { request, _ ->
-            if (OpenWeatherAppId.shouldAttach(request)) {
+            if (OpenWeatherClientPlugin.shouldAttach(request)) {
                 val params = request.url.parameters
                 if (params["appid"].isNullOrBlank()) {
                     params.append("appid", key)

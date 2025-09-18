@@ -4,5 +4,3 @@ package org.dosys.project
 actual class Platform actual constructor() {
     actual val name: String = "Android"
 }
-
-val androidModule = listOf(platformModule)

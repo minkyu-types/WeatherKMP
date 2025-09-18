@@ -19,6 +19,8 @@ abstract class BaseStore<S: BaseState, SE: BaseSideEffect>(
 
     final override val container = scope.container<S, SE>(initialState)
 
+    protected val storeScope = scope
+
     protected val _state = MutableStateFlow(initialState)
     val state: StateFlow<S> = _state.asStateFlow()
 

@@ -8,7 +8,7 @@ import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.CancellationException
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
-import org.dosys.weather_domain.DomainException
+import org.dosys.weather_domain.base.DomainException
 
 sealed interface DataExceptions {
 

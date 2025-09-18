@@ -6,19 +6,21 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.retryWhen
+import org.dosys.weather_domain.model.CurrentWeather
 
-abstract class BaseFlowUseCaseImpl<in I, out O, R: BaseRepository>(
-    final override val repository: R,
+abstract class BaseFlowUseCaseImpl<in I, out O>(
     private val dispatcher: CoroutineDispatcher
-): BaseFlowUseCase<I, O, R> {
+) : BaseFlowUseCase<I, O> {
 
     override fun invoke(input: I): Flow<O> {
-        return flow { emit(execute(input)) }
-            .retryWhen { e, attempt ->
-                true
-            }
-            .catch { e -> emit(onError(e)) }
-            .flowOn(dispatcher)
+        return flow {
+            emit(execute(input))
+        }.retryWhen { e, attempt ->
+            true
+        }.catch { e ->
+            e.printStackTrace()
+            emit(onError(e))
+        }.flowOn(dispatcher)
     }
 
     protected abstract suspend fun execute(input: I): O

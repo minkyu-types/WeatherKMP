@@ -2,33 +2,33 @@ package org.dosys.weather_domain.usecase
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import org.dosys.weather_domain.base.BaseFlowUseCaseImpl
 import org.dosys.weather_domain.model.CurrentWeather
 import org.dosys.weather_domain.model.ExcludeType
-import org.dosys.weather_domain.model.Location
 import org.dosys.weather_domain.repository.WeatherRepository
 import org.dosys.weather_domain.usecase.GetCurrentWeatherUseCase.GetCurrentWeatherParams
 
 class GetCurrentWeatherUseCase(
-    repository: WeatherRepository
-): BaseFlowUseCaseImpl<GetCurrentWeatherParams, Flow<CurrentWeather>, WeatherRepository>(
-    repository = repository,
+    private val repository: WeatherRepository
+): BaseFlowUseCaseImpl<GetCurrentWeatherParams, CurrentWeather>(
     dispatcher = Dispatchers.IO
 ) {
-    override suspend fun execute(input: GetCurrentWeatherParams): Flow<CurrentWeather> {
-        return flow {
-            repository.getCurrentWeather(
-                input.lat, input.lon,
-                input.excludeTypes,
-                input.units,
-                input.language
-            )
-        }
+    override suspend fun execute(input: GetCurrentWeatherParams): CurrentWeather {
+        return repository.getCurrentWeather(
+            input.lat, input.lon,
+            input.excludeTypes,
+            input.units,
+            input.language
+        ).onSuccess {
+            it
+        }.onFailure { e ->
+            e.printStackTrace()
+            throw e
+        }.getOrThrow()
     }
 
-    override fun onError(e: Throwable): Flow<CurrentWeather> {
+    override fun onError(e: Throwable): CurrentWeather {
+        e.printStackTrace()
         return super.onError(e)
     }
 

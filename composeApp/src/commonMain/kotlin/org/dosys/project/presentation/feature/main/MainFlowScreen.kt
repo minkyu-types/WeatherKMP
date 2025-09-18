@@ -84,7 +84,7 @@ fun MainFlowScreen(
                 ) {
                     WeatherMainScreen(
                         onWeatherClick = { id: Long ->
-                            navController.navigate(NavigationScreens.WeatherDetail.name)
+                            navController.navigate("${NavigationScreens.WeatherDetail.name}/$id")
                         }
                     )
                 }
@@ -96,7 +96,7 @@ fun MainFlowScreen(
                 }
 
                 composable(
-                    route = NavigationScreens.WeatherDetail.name,
+                    route = "${NavigationScreens.WeatherDetail.name}/{id}",
                     arguments = listOf(navArgument("id") { type = NavType.LongType })
                 ) { backStackEntry ->
 

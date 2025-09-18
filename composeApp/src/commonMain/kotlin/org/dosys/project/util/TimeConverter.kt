@@ -1,5 +1,6 @@
 package org.dosys.project.util
 
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.FixedOffsetTimeZone
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -54,14 +55,67 @@ object TimeConverter {
     @OptIn(ExperimentalTime::class)
     fun convertUTCToLocalDateTime(
         utcDateTime: Long,
-        zone: String,
-        zoneOffset: Int
+        timezone: Int,
     ): LocalDateTime {
-        val epochSeconds = if (utcDateTime > 1_000_000_000_000L) utcDateTime / 1000 else utcDateTime
-        val tz: TimeZone = runCatching { TimeZone.of(zone) }
-            .getOrElse { FixedOffsetTimeZone(UtcOffset(seconds = zoneOffset)) }
-        val ldt = Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(tz)
+        val epochSeconds = if (utcDateTime > 1_000_000_000_000L) {
+            utcDateTime / 1000
+        } else {
+            utcDateTime
+        }
 
-        return ldt
+        // timezone(Int)은 오프셋 값이므로 FixedOffsetTimeZone 사용
+        val tz: TimeZone = FixedOffsetTimeZone(
+            UtcOffset(seconds = timezone.takeIf { it != 0 } ?: timezone)
+        )
+
+        return Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(tz)
+    }
+
+    fun hm(hour: Int, minute: Int): String {
+        val h = hour.coerceIn(0, 23).toString().padStart(2, '0')
+        val m = minute.coerceIn(0, 59).toString().padStart(2, '0')
+        return "$h:$m"
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun formatHm(epochSeconds: Long, zoneId: String): String {
+        val ldt = Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(TimeZone.of(zoneId))
+        return hm(ldt.hour, ldt.minute)
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun formatHmWithOffset(epochSeconds: Long, offsetSeconds: Int): String {
+        val adjusted = Instant.fromEpochSeconds(epochSeconds + offsetSeconds)
+        val ldt = adjusted.toLocalDateTime(TimeZone.UTC)
+        return hm(ldt.hour, ldt.minute)
     }
 }
+
+enum class DayNameStyle {
+    FULL,
+    SHORT
+}
+
+fun DayOfWeek.koreanName(style: DayNameStyle = DayNameStyle.FULL): String = when (style) {
+    DayNameStyle.FULL -> when (this) {
+        DayOfWeek.MONDAY    -> "월요일"
+        DayOfWeek.TUESDAY   -> "화요일"
+        DayOfWeek.WEDNESDAY -> "수요일"
+        DayOfWeek.THURSDAY  -> "목요일"
+        DayOfWeek.FRIDAY    -> "금요일"
+        DayOfWeek.SATURDAY  -> "토요일"
+        DayOfWeek.SUNDAY    -> "일요일"
+    }
+    DayNameStyle.SHORT -> when (this) {
+        DayOfWeek.MONDAY    -> "월"
+        DayOfWeek.TUESDAY   -> "화"
+        DayOfWeek.WEDNESDAY -> "수"
+        DayOfWeek.THURSDAY  -> "목"
+        DayOfWeek.FRIDAY    -> "금"
+        DayOfWeek.SATURDAY  -> "토"
+        DayOfWeek.SUNDAY    -> "일"
+    }
+}
+
+fun LocalDateTime.dayOfWeekKo(style: DayNameStyle = DayNameStyle.FULL): String =
+    this.date.dayOfWeek.koreanName(style)

@@ -1,33 +1,33 @@
 package com.samsung.weather_data.remote.model.type
 
 enum class WeatherUnit(
-    unitName: String,
-    temperatureUnit: com.samsung.weather_data.remote.model.type.WeatherUnit.TemperatureUnit,
-    windSpeedUnit: com.samsung.weather_data.remote.model.type.WeatherUnit.WindSpeedUnit,
-    pressureUnit: com.samsung.weather_data.remote.model.type.WeatherUnit.PressureUnit,
-    rainUnit: com.samsung.weather_data.remote.model.type.WeatherUnit.RainUnit
+    val unitName: String,
+    temperatureUnit: TemperatureUnit,
+    windSpeedUnit: WindSpeedUnit,
+    pressureUnit: PressureUnit,
+    rainUnit: RainUnit
 ) {
     STANDARD("standard",
-        com.samsung.weather_data.remote.model.type.WeatherUnit.TemperatureUnit.KELVIN,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.WindSpeedUnit.METRIC,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.PressureUnit.HPA,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.RainUnit.MM
+        TemperatureUnit.KELVIN,
+        WindSpeedUnit.METRIC,
+        PressureUnit.HPA,
+        RainUnit.MM
     ),
     METRIC("metric",
-        com.samsung.weather_data.remote.model.type.WeatherUnit.TemperatureUnit.CELSIUS,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.WindSpeedUnit.METRIC,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.PressureUnit.HPA,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.RainUnit.MM
+        TemperatureUnit.CELSIUS,
+        WindSpeedUnit.METRIC,
+        PressureUnit.HPA,
+        RainUnit.MM
     ),
     IMPERIAL("imperial",
-        com.samsung.weather_data.remote.model.type.WeatherUnit.TemperatureUnit.FAHRENHEIT,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.WindSpeedUnit.IMPERIAL,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.PressureUnit.HPA,
-        com.samsung.weather_data.remote.model.type.WeatherUnit.RainUnit.MM
+        TemperatureUnit.FAHRENHEIT,
+        WindSpeedUnit.IMPERIAL,
+        PressureUnit.HPA,
+        RainUnit.MM
     );
 
     companion object {
-        val DEFAULT = com.samsung.weather_data.remote.model.type.WeatherUnit.STANDARD
+        val DEFAULT = STANDARD
     }
 
     enum class TemperatureUnit(
