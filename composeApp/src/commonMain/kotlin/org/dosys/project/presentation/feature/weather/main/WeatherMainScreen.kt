@@ -21,12 +21,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Air
 import androidx.compose.material.icons.rounded.CalendarMonth
-import androidx.compose.material.icons.rounded.ShieldMoon
 import androidx.compose.material.icons.rounded.Thermostat
 import androidx.compose.material.icons.rounded.WaterDrop
 import androidx.compose.material.icons.rounded.WbCloudy
 import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material.icons.rounded.WindPower
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -64,17 +64,17 @@ import org.dosys.project.util.withComma
 import org.koin.mp.KoinPlatform.getKoin
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 private const val DAY_SEC = 86_400L
 
-@OptIn(ExperimentalTime::class)
 @Composable
 fun WeatherMainScreen(
     onWeatherClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: WeatherMainViewModel = getKoin().get<WeatherMainViewModel>()
-    val currentWeatherState by viewModel.state.collectAsState(null)
+    val weatherState by viewModel.state.collectAsState(null)
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -82,6 +82,7 @@ fun WeatherMainScreen(
                 is WeatherMainSideEffect.ShowAlert -> {
 
                 }
+
                 is WeatherMainSideEffect.ChangeListType -> {
 
                 }
@@ -89,20 +90,21 @@ fun WeatherMainScreen(
         }
     }
 
-    when (currentWeatherState?.loadState) {
+    when (weatherState?.loadState) {
         LoadState.Idle -> {
             Logger.d { "WeatherMainScreen: LoadState.Idle" }
         }
+
         LoadState.Loading -> {
             Logger.d { "WeatherMainScreen: LoadState.Loading" }
         }
+
         LoadState.Success -> {
-            val currentWeatherModel = currentWeatherState?.weather!!
-                .also {
-                    Logger.d(
-                        messageString = it.toString()
-                    )
-                }
+            val currentWeather = weatherState?.weather!!
+            val weatherFor5Days = transform3hForecastToDailyWeather(
+                weatherState?.weatherFor5days!!.list,
+                weatherState?.weatherFor5days!!.city.timezone
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -110,8 +112,8 @@ fun WeatherMainScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 WeatherMainInfoArea(
-                    timezone = currentWeatherModel.timezone,
-                    currentWeather = currentWeatherModel,
+                    timezone = currentWeather.timezone,
+                    currentWeather = currentWeather,
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                 )
@@ -127,35 +129,37 @@ fun WeatherMainScreen(
 //                )
                 Spacer(modifier = Modifier.height(16.dp))
                 WeatherDailyInfoArea(
-                    weather = currentWeatherModel,
+                    timezoneOffset = currentWeather.timezone,
+                    dailyWeathers = weatherFor5Days,
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 WeatherDailySunWindInfo(
-                    timezone = currentWeatherModel.timezone,
-                    sunrise = currentWeatherModel.sys.sunrise,
-                    sunset = currentWeatherModel.sys.sunset,
-                    wind = currentWeatherModel.wind,
+                    timezone = currentWeather.timezone,
+                    sunrise = currentWeather.sys.sunrise,
+                    sunset = currentWeather.sys.sunset,
+                    wind = currentWeather.wind,
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 WeatherFeelsLikeRainInfo(
-                    currentWeather = currentWeatherModel,
+                    currentWeather = currentWeather,
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 WeatherHumidityPressureInfo(
-                    humidity = currentWeatherModel.main.humidity,
-                    pressure = currentWeatherModel.main.pressure,
+                    humidity = currentWeather.main.humidity,
+                    pressure = currentWeather.main.pressure,
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                 )
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
+
         else -> {
             Logger.d { "WeatherMainScreen: LoadState.Error" }
         }
@@ -197,7 +201,7 @@ private fun WeatherMainInfoArea(
             fontSize = 16.sp
         )
         Text(
-            text = "최고:${currentWeather.main.tempMax.toInt()}°  최저:${currentWeather.main.tempMin.toInt()}°",
+            text = "최고: ${currentWeather.main.tempMax.toInt()}°  최저: ${currentWeather.main.tempMin.toInt()}°",
             color = Color.White,
             fontSize = 16.sp
         )
@@ -206,52 +210,99 @@ private fun WeatherMainInfoArea(
 
 @Composable
 private fun WeatherDailyInfoArea(
-    weather: CurrentWeatherModel,
+    timezoneOffset: Int,
+    dailyWeathers: List<DailyWeatherModel>,
     modifier: Modifier = Modifier
 ) {
-    GlassPanel(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+        GlassPanel(
+            modifier = modifier
+                .fillMaxWidth()
         ) {
-            Icon(
-                imageVector = Icons.Rounded.CalendarMonth,
-                tint = Color.White,
-                contentDescription = null,
-            )
-            Text(
-                text = "7일간의 일기예보",
-                color = Color.White,
-                modifier = modifier
-                    .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.CalendarMonth,
+                    tint = Color.White,
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "6일간의 일기예보",
+                    color = Color.White,
+                    modifier = modifier
+                        .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            dailyWeathers.forEach { weather ->
+                DailyWeatherItem(
+                    weather = weather,
+                    timezoneOffset = timezoneOffset,
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .fillMaxWidth()
+                )
+                if (weather != dailyWeathers.last()) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(color = Color.LightGray)
+                    )
+                }
+            }
+        }
+}
+
+@OptIn(ExperimentalTime::class)
+private fun transform3hForecastToDailyWeather(
+    threeHourForecast: List<ThreeHourForecastModel>,
+    timezoneOffset: Int
+): List<DailyWeatherModel> {
+    return threeHourForecast
+        .groupBy { forecast ->
+            val instant = Instant.fromEpochSeconds(forecast.dt, timezoneOffset)
+            val zone = FixedOffsetTimeZone(UtcOffset(seconds = timezoneOffset))
+            instant.toLocalDateTime(zone).date
+        }.map { (date, forecastForDay) ->
+            val temps = forecastForDay.map { it.main.temp }
+            val currTemp = forecastForDay.minByOrNull { forecast ->
+                kotlin.math.abs(forecast.dt * 1000 - Clock.System.now().toEpochMilliseconds())
+            }?.main?.temp!!
+            val maxTemp = temps.maxOrNull() ?: 0.0
+            val minTemp = temps.minOrNull() ?: 0.0
+            val avgPop = forecastForDay.sumOf { it.pop } / forecastForDay.size
+            val totalRain = forecastForDay.sumOf { it.rain?.threeHour ?: 0.0 }
+            val mainWeather = forecastForDay
+                .flatMap { it.weather }
+                .groupBy { it.main }
+                .maxByOrNull { it.value.size }
+                ?.value
+                ?.firstOrNull()
+
+            DailyWeatherModel(
+                dt = date,
+                weather = mainWeather!!,
+                pop = avgPop,
+                rain = if (totalRain == 0.0) {
+                    null
+                } else {
+                    DailyWeatherModel.DailyRainModel(
+                        amount = totalRain
+                    )
+                },
+                temp = DailyWeatherModel.TempModel(
+                    curr = currTemp,
+                    min = minTemp,
+                    max = maxTemp
+                )
             )
         }
-//        weather.daily.forEach { day ->
-//            DailyWeatherItem(
-//                currTemp = weather.current.temp,
-//                daily = day,
-//                timezone = weather.timezone,
-//                timezoneOffset = weather.timezoneOffset,
-//                modifier = Modifier
-//                    .padding(vertical = 12.dp)
-//                    .fillMaxWidth()
-//            )
-//            if (day != weather.daily.last()) {
-//                HorizontalDivider(
-//                    modifier = Modifier
-//                        .padding(horizontal = 16.dp)
-//                        .fillMaxWidth()
-//                        .height(1.dp)
-//                        .background(color = Color.LightGray)
-//                )
-//            }
-//        }
-    }
 }
 
 //@Composable
@@ -388,20 +439,16 @@ private fun HourlyWeatherHeaderItem(
 @OptIn(ExperimentalTime::class)
 @Composable
 private fun DailyWeatherItem(
-    weather: CurrentWeatherModel,
+    weather: DailyWeatherModel,
+    timezoneOffset: Int,
     modifier: Modifier = Modifier
 ) {
-    val tempData =
-        weather.main.temp.convert(WeatherUnit.TemperatureUnit.KELVIN, WeatherUnit.TemperatureUnit.CELSIUS)
-    val ldt = TimeConverter.convertUTCToLocalDateTime(
-        weather.dt,
-        weather.timezone,
-    )
-    val tz: TimeZone = FixedOffsetTimeZone(UtcOffset(seconds = weather.timezone))
-    val dateText = if (ldt == Clock.System.now().toLocalDateTime(tz)) {
+    val zone = FixedOffsetTimeZone(UtcOffset(seconds = timezoneOffset))
+    val nowDate = Clock.System.now().toLocalDateTime(zone).date
+    val dateText = if (weather.dt == nowDate) {
         "오늘"
     } else {
-        ldt.dayOfWeekKo(DayNameStyle.SHORT)
+        weather.dt.dayOfWeekKo(DayNameStyle.SHORT)
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -415,7 +462,9 @@ private fun DailyWeatherItem(
         )
         Spacer(modifier = Modifier.weight(1f))
         WeatherIconWithRainPercentage(
-            weather = weather,
+            weather = weather.weather,
+            pop = weather.pop,
+            rain = weather.rain,
             onDayClick = {
 
             },
@@ -424,18 +473,18 @@ private fun DailyWeatherItem(
         )
         Spacer(modifier = Modifier.width(32.dp))
         Text(
-            text = "${weather.main.tempMin.toInt()}",
+            text = "${weather.temp.min.toInt()}",
             color = Temp_Text_min
         )
         Spacer(modifier = Modifier.width(8.dp))
         TemperatureProgressBar(
-            currTemp = weather.main.temp,
+            currTemp = weather.temp.curr,
             modifier = Modifier
                 .width(100.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "${weather.main.tempMax.toInt()}",
+            text = "${weather.temp.max.toInt()}",
             color = Color.White
         )
     }
@@ -470,7 +519,9 @@ private fun TemperatureProgressBar(
 
 @Composable
 private fun WeatherIconWithRainPercentage(
-    weather: CurrentWeatherModel,
+    weather: WeatherModel,
+    pop: Double,
+    rain: DailyWeatherModel.DailyRainModel? = null,
     onDayClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -484,17 +535,18 @@ private fun WeatherIconWithRainPercentage(
             }
     ) {
         AsyncImage(
-            model = ImageConverter.openWeatherIconUrl(weather.weather.first().icon),
+            model = ImageConverter.openWeatherIconUrl(weather.icon),
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)
         )
-        val rainAmount: Double = weather.rain?.oneHour ?: 0.0
-        Text(
-            text = "${(rainAmount * 100).toInt()}%",
-            color = Rain_Text_SkyBlue,
-            fontSize = 12.sp
-        )
+        if (rain != null) {
+            Text(
+                text = "${(pop * 100).toInt()}%",
+                color = Rain_Text_SkyBlue,
+                fontSize = 12.sp
+            )
+        }
     }
 }
 
@@ -576,7 +628,7 @@ fun WeatherDailySunWindInfo(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
-               verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "바람",
@@ -597,7 +649,7 @@ fun WeatherDailySunWindInfo(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "${wind.gust}m/s",
+                    text = "${wind.gust ?: 0}m/s",
                     color = Color.White
                 )
             }
@@ -662,6 +714,7 @@ fun WeatherFeelsLikeRainInfo(
             Text(
                 text = "실제 기온보다 더 $feelsLikeText 느껴지겠습니다.",
                 fontSize = 12.sp,
+                lineHeight = 14.sp,
                 color = Color.White
             )
         }
@@ -765,12 +818,14 @@ fun WeatherHumidityPressureInfo(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "${pressure.withComma()}\n",
+                text = pressure.withComma(),
                 fontSize = 24.sp,
                 fontWeight = FontWeight(700),
+                lineHeight = 26.sp,
                 textAlign = TextAlign.Center,
                 color = Color.White,
                 modifier = Modifier
+                    .wrapContentHeight()
                     .fillMaxWidth()
             )
             Text(

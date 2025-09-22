@@ -10,24 +10,19 @@ import org.dosys.weather_domain.usecase.GetCurrentWeatherUseCase.GetCurrentWeath
 
 class GetCurrentWeatherUseCase(
     private val repository: WeatherRepository
-): BaseFlowUseCaseImpl<GetCurrentWeatherParams, CurrentWeather>(
+): BaseFlowUseCaseImpl<GetCurrentWeatherParams, Result<CurrentWeather>>(
     dispatcher = Dispatchers.IO
 ) {
-    override suspend fun execute(input: GetCurrentWeatherParams): CurrentWeather {
+    override suspend fun execute(input: GetCurrentWeatherParams): Result<CurrentWeather> {
         return repository.getCurrentWeather(
             input.lat, input.lon,
             input.excludeTypes,
             input.units,
             input.language
-        ).onSuccess {
-            it
-        }.onFailure { e ->
-            e.printStackTrace()
-            throw e
-        }.getOrThrow()
+        )
     }
 
-    override fun onError(e: Throwable): CurrentWeather {
+    override fun onError(e: Throwable): Result<CurrentWeather> {
         e.printStackTrace()
         return super.onError(e)
     }

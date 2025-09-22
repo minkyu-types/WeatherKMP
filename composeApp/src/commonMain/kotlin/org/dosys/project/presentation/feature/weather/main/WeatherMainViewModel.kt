@@ -16,6 +16,6 @@ class WeatherMainViewModel(
     val effect: Flow<WeatherMainSideEffect> = store.effect
 
     init {
-        store.getCurrentWeather(33.44, -94.04)
+        store.loadWeather(33.44, -94.04)
     }
 }

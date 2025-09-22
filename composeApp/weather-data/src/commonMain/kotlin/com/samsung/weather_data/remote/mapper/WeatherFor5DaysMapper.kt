@@ -44,12 +44,12 @@ internal class WeatherFor5DaysMapper {
     private fun DailyWeatherDto.toDomain(): DailyWeather = DailyWeather(
         dt = dt,
         main = main.toDomain(),
-        weather = weather.toDomain(),
+        weather = weather.map { it.toDomain() },
         clouds = clouds.toDomain(),
         wind = wind.toDomain(),
         visibility = visibility,
         pop = pop,
-        rain = rain.toDomain(),
+        rain = rain?.toDomain(),
         sys = sys.toDomain(),
         dtText = dtText
     )
@@ -98,9 +98,10 @@ internal class WeatherFor5DaysMapper {
         gust = gust
     )
 
-    private fun RainDto.toDomain(): Rain = Rain(
-        oneHour = oneHour
-    )
+    private fun DailyWeatherDto.Rain3HourDto.toDomain(): DailyWeather.Rain3Hour =
+        DailyWeather.Rain3Hour(
+            threeHour = threeHour
+        )
 
     private fun DailyWeatherDto.Sys.toDomain(): DailyWeather.Sys = DailyWeather.Sys(
         pod = pod
@@ -111,12 +112,12 @@ internal class WeatherFor5DaysMapper {
     private fun DailyWeather.toData(): DailyWeatherDto = DailyWeatherDto(
         dt = dt,
         main = main.toData(),
-        weather = weather.toData(),
+        weather = weather.map { it.toData() },
         clouds = clouds.toData(),
         wind = wind.toData(),
         visibility = visibility,
         pop = pop,
-        rain = rain.toData(),
+        rain = rain?.toData(),
         sys = sys.toData(),
         dtText = dtText
     )
@@ -163,8 +164,8 @@ internal class WeatherFor5DaysMapper {
         gust = gust
     )
 
-    private fun Rain.toData(): RainDto = RainDto(
-        oneHour = oneHour
+    private fun DailyWeather.Rain3Hour.toData(): DailyWeatherDto.Rain3HourDto = DailyWeatherDto.Rain3HourDto(
+        threeHour = threeHour
     )
 
     private fun DailyWeather.Sys.toData(): DailyWeatherDto.Sys = DailyWeatherDto.Sys(

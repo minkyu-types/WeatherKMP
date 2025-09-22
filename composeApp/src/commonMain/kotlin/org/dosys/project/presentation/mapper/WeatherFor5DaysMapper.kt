@@ -3,9 +3,8 @@ package org.dosys.project.presentation.mapper
 import org.dosys.project.presentation.feature.weather.main.CityModel
 import org.dosys.project.presentation.feature.weather.main.CloudsModel
 import org.dosys.project.presentation.feature.weather.main.CoordModel
-import org.dosys.project.presentation.feature.weather.main.DailyWeatherModel
+import org.dosys.project.presentation.feature.weather.main.ThreeHourForecastModel
 import org.dosys.project.presentation.feature.weather.main.MainModel
-import org.dosys.project.presentation.feature.weather.main.RainModel
 import org.dosys.project.presentation.feature.weather.main.WeatherModel
 import org.dosys.project.presentation.feature.weather.main.WeathersFor5DaysModel
 import org.dosys.project.presentation.feature.weather.main.WindModel
@@ -14,7 +13,6 @@ import org.dosys.weather_domain.model.Clouds
 import org.dosys.weather_domain.model.Coord
 import org.dosys.weather_domain.model.DailyWeather
 import org.dosys.weather_domain.model.Main
-import org.dosys.weather_domain.model.Rain
 import org.dosys.weather_domain.model.Weather
 import org.dosys.weather_domain.model.WeathersFor5Days
 import org.dosys.weather_domain.model.Wind
@@ -39,15 +37,15 @@ class WeatherFor5DaysMapper {
         city = weathersFor5DaysModel.city.toDomain()
     )
 
-    private fun DailyWeather.toPresentation(): DailyWeatherModel = DailyWeatherModel(
+    private fun DailyWeather.toPresentation(): ThreeHourForecastModel = ThreeHourForecastModel(
         dt = dt,
         main = main.toPresentation(),
-        weather = weather.toPresentation(),
+        weather = weather.map { it.toPresentation() },
         clouds = clouds.toPresentation(),
         wind = wind.toPresentation(),
         visibility = visibility,
         pop = pop,
-        rain = rain.toPresentation(),
+        rain = rain?.toPresentation(),
         sys = sys.toPresentation(),
         dtText = dtText
     )
@@ -96,25 +94,26 @@ class WeatherFor5DaysMapper {
         gust = gust
     )
 
-    private fun Rain.toPresentation(): RainModel = RainModel(
-        oneHour = oneHour
-    )
+    private fun DailyWeather.Rain3Hour.toPresentation(): ThreeHourForecastModel.RainThreeHourModel =
+        ThreeHourForecastModel.RainThreeHourModel(
+            threeHour = threeHour
+        )
 
-    private fun DailyWeather.Sys.toPresentation(): DailyWeatherModel.SysModel = DailyWeatherModel.SysModel(
+    private fun DailyWeather.Sys.toPresentation(): ThreeHourForecastModel.SysModel = ThreeHourForecastModel.SysModel(
         pod = pod
     )
 
     // ============================================================================ \\
 
-    private fun DailyWeatherModel.toDomain(): DailyWeather = DailyWeather(
+    private fun ThreeHourForecastModel.toDomain(): DailyWeather = DailyWeather(
         dt = dt,
         main = main.toDomain(),
-        weather = weather.toDomain(),
+        weather = weather.map { it.toDomain() },
         clouds = clouds.toDomain(),
         wind = wind.toDomain(),
         visibility = visibility,
         pop = pop,
-        rain = rain.toDomain(),
+        rain = rain?.toDomain(),
         sys = sys.toDomain(),
         dtText = dtText
     )
@@ -163,11 +162,11 @@ class WeatherFor5DaysMapper {
         gust = gust
     )
 
-    private fun RainModel.toDomain(): Rain = Rain(
-        oneHour = oneHour
+    private fun ThreeHourForecastModel.RainThreeHourModel.toDomain(): DailyWeather.Rain3Hour = DailyWeather.Rain3Hour(
+        threeHour = threeHour
     )
 
-    private fun DailyWeatherModel.SysModel.toDomain(): DailyWeather.Sys = DailyWeather.Sys(
+    private fun ThreeHourForecastModel.SysModel.toDomain(): DailyWeather.Sys = DailyWeather.Sys(
         pod = pod
     )
 }

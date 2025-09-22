@@ -1,6 +1,6 @@
 package com.samsung.weather_data.di
 
-import com.samsung.weather_data.remote.repositoryImpl.WeatherRepositoryImpl
+import com.samsung.weather_data.repositoryImpl.WeatherRepositoryImpl
 import org.dosys.weather_domain.repository.WeatherRepository
 import org.koin.dsl.module
 

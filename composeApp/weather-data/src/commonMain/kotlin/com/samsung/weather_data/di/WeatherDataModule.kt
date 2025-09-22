@@ -6,7 +6,7 @@ import com.samsung.weather_data.remote.api.createGetCurrentWeatherApi
 import com.samsung.weather_data.remote.api.createGetWeatherFor5DaysApi
 import com.samsung.weather_data.remote.mapper.CurrentWeatherMapper
 import com.samsung.weather_data.remote.mapper.WeatherFor5DaysMapper
-import com.samsung.weather_data.remote.repositoryImpl.WeatherRepositoryImpl
+import com.samsung.weather_data.repositoryImpl.WeatherRepositoryImpl
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.dosys.weather_domain.repository.WeatherRepository
 import org.koin.dsl.module

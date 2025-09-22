@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,10 +9,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val abcLocationLib = "com.linecorp.abc:kmm-location:0.2.4"
 val abcNotifications = "com.linecorp.abc:kmm-notifications:0.4.1"
 
 kotlin {
+    val xcf = XCFramework()
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -26,6 +28,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            xcf.add(this)
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -38,6 +42,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.androidx.workmanager)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.json)
             implementation(abcNotifications)
             api(abcNotifications)
         }
@@ -60,6 +65,7 @@ kotlin {
             implementation(libs.koin.annotations)
 
             implementation(libs.jetpack.navigation)
+            implementation(libs.ktorfit)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.encoding)
             implementation(libs.ktor.client.logging)
@@ -70,6 +76,9 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
             implementation(libs.log.kermit)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -37,6 +37,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.ktor.client.core)
+                implementation(libs.ktor.okhttp)
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.material)
@@ -71,6 +72,11 @@ dependencies {
     add("kspIosX64",            libs.ktorfit.compiler)
     add("kspIosArm64",          libs.ktorfit.compiler)
     add("kspIosSimulatorArm64", libs.ktorfit.compiler)
+
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
 }
 
 android {

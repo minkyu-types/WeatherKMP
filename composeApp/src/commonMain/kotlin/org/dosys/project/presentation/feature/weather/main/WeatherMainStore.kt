@@ -3,6 +3,9 @@ package org.dosys.project.presentation.feature.weather.main
 import com.samsung.weather_data.remote.model.type.Language
 import com.samsung.weather_data.remote.model.type.WeatherUnit
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.dosys.project.presentation.feature.base.BaseStore
 import org.dosys.project.presentation.feature.base.LoadState
@@ -22,30 +25,55 @@ class WeatherMainStore(
     initialState = WeatherMainState()
 ) {
 
-    fun getCurrentWeather(
-        lat: Double, lon: Double,
+    fun loadWeather(
+        lat: Double, lon: Double
     ) {
         storeScope.launch {
             setState { copy(loadState = LoadState.Loading) }
 
             try {
-                getCurrentWeatherUseCase(
-                    GetCurrentWeatherUseCase.GetCurrentWeatherParams(
-                        lat = lat,
-                        lon = lon,
-                        units = WeatherUnit.METRIC.unitName,
-                        language = Language.KR.languageName,
-                    )
-                ).collect { result ->
-                    setState {
-                        copy(
-                            loadState = LoadState.Success,
-                            weather = currentWeatherMapper.mapToPresentation(result)
+                val deferredCurrentWeather = async {
+                    getCurrentWeatherUseCase(
+                        GetCurrentWeatherUseCase.GetCurrentWeatherParams(
+                            lat = lat,
+                            lon = lon,
+                            units = WeatherUnit.METRIC.unitName,
+                            language = Language.KR.languageName,
                         )
-                    }
+                    ).first().getOrThrow()
+                }
+
+                val deferredWeatherFor5Days = async {
+                    getWeathersFor5DaysUseCase(
+                        GetWeathersFor5DaysUseCase.GetWeathersFor5DaysParams(
+                            lat = lat,
+                            lon = lon,
+                            units = WeatherUnit.METRIC.unitName,
+                            mode = emptyList(),
+                            lang = Language.KR.languageName,
+                        )
+                    ).first().getOrThrow()
+                }
+
+                val currentWeather = deferredCurrentWeather.await()
+                val weatherFor5Days = deferredWeatherFor5Days.await()
+
+                setState {
+                    copy(
+                        loadState = LoadState.Success,
+                        weather = currentWeatherMapper.mapToPresentation(currentWeather),
+                        weatherFor5days = weatherFor5DaysMapper.mapToPresentation(weatherFor5Days)
+                    )
                 }
             } catch (e: Exception) {
-                setState { copy(loadState = LoadState.Error(e.message ?: "WeatherMainStore: Unknown error")) }
+                e.printStackTrace()
+                setState {
+                    copy(
+                        loadState = LoadState.Error(
+                            e.message ?: "WeatherMainStore: Unknown error - loadWeather"
+                        )
+                    )
+                }
             }
         }
     }

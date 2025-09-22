@@ -2,6 +2,7 @@ package org.dosys.project.util
 
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.FixedOffsetTimeZone
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
@@ -117,5 +118,5 @@ fun DayOfWeek.koreanName(style: DayNameStyle = DayNameStyle.FULL): String = when
     }
 }
 
-fun LocalDateTime.dayOfWeekKo(style: DayNameStyle = DayNameStyle.FULL): String =
-    this.date.dayOfWeek.koreanName(style)
+fun LocalDate.dayOfWeekKo(style: DayNameStyle = DayNameStyle.FULL): String =
+    this.dayOfWeek.koreanName(style)

@@ -9,7 +9,7 @@ import org.dosys.weather_domain.repository.WeatherRepository
 
 class GetWeathersFor5DaysUseCase(
     private val repository: WeatherRepository,
-): BaseFlowUseCaseImpl<GetWeathersFor5DaysUseCase.GetWeathersFor5DaysParams, WeathersFor5Days>(
+): BaseFlowUseCaseImpl<GetWeathersFor5DaysUseCase.GetWeathersFor5DaysParams, Result<WeathersFor5Days>>(
     dispatcher = Dispatchers.IO
 ) {
 
@@ -18,19 +18,15 @@ class GetWeathersFor5DaysUseCase(
         val lon: Double,
         val units: String?,
         val mode: List<ExcludeType>?,
-        val cnt: Int?,
+        val cnt: Int? = 40,
         val lang: String?
     )
 
-    override suspend fun execute(input: GetWeathersFor5DaysParams): WeathersFor5Days {
+    override suspend fun execute(input: GetWeathersFor5DaysParams): Result<WeathersFor5Days> {
         return repository.getWeatherFor5Days(
             input.lat, input.lon,
             input.units, input.mode,
             input.cnt, input.lang
-        ).onSuccess { result ->
-            result
-        }.onFailure { e ->
-            e.printStackTrace()
-        }.getOrThrow()
+        )
     }
 }

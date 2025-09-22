@@ -12,16 +12,19 @@ data class WeathersFor5DaysResponseDto(
     val city: CityDto
 )
 
+/**
+ * @param pop 3시간 동안의 강수 확률
+ */
 @Serializable
 data class DailyWeatherDto(
     val dt: Long,
     val main: MainDto,
-    val weather: WeatherDto,
+    val weather: List<WeatherDto>,
     val clouds: CloudsDto,
     val wind: WindDto,
     val visibility: Int,
     val pop: Double,
-    val rain: RainDto,
+    val rain: Rain3HourDto? = null,
     val sys: Sys,
     @SerialName("dt_txt") val dtText: String
 ) {
@@ -29,6 +32,15 @@ data class DailyWeatherDto(
     @Serializable
     data class Sys(
         val pod: String
+    )
+
+    @Serializable
+    data class Rain3HourDto(
+        @SerialName("3h") val threeHour: Double
+    )
+
+    data class Snow3HourDto(
+        @SerialName("eh") val threeHour: Double
     )
 }
 

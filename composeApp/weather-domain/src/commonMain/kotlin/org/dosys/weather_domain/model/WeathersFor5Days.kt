@@ -9,18 +9,22 @@ data class WeathersFor5Days(
 data class DailyWeather(
     val dt: Long,
     val main: Main,
-    val weather: Weather,
+    val weather: List<Weather>,
     val clouds: Clouds,
     val wind: Wind,
     val visibility: Int,
     val pop: Double,
-    val rain: Rain,
+    val rain: Rain3Hour? = null,
     val sys: Sys,
     val dtText: String
 ) {
 
     data class Sys(
         val pod: String
+    )
+
+    data class Rain3Hour(
+        val threeHour: Double
     )
 }
 
