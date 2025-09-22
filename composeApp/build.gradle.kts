@@ -7,6 +7,11 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+}
+
+ksp {
+    arg("room.generateKotlin", "true")
 }
 
 val abcNotifications = "com.linecorp.abc:kmm-notifications:0.4.1"

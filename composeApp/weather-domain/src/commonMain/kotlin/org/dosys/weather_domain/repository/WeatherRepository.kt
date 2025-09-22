@@ -1,6 +1,6 @@
 package org.dosys.weather_domain.repository
 
-import org.dosys.weather_domain.base.BaseRepository
+import org.dosys.base_domain.BaseRepository
 import org.dosys.weather_domain.model.CurrentWeather
 import org.dosys.weather_domain.model.ExcludeType
 import org.dosys.weather_domain.model.WeathersFor5Days

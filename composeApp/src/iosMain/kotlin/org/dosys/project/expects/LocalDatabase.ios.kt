@@ -1,18 +1,21 @@
-package org.dosys.project
+package org.dosys.project.expects
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.samsung.weather_data.local.TodoDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
+import org.dosys.todo_data.local.TodoDatabase
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-fun getTodoDatabaseBuilder(): RoomDatabase.Builder<TodoDatabase> {
-    val dbFilePath = documentDirectory() + "todo.db"
-    return Room.databaseBuilder<TodoDatabase>(
-        name = dbFilePath
-    )
+actual object TodoDatabaseConstructor {
+    actual fun initialize(): RoomDatabase.Builder<TodoDatabase> {
+        val dbFilePath = documentDirectory() + "todo.db"
+        return Room.databaseBuilder<TodoDatabase>(
+            name = dbFilePath
+        )
+            .fallbackToDestructiveMigration(false)
+    }
 }
 
 @OptIn(ExperimentalForeignApi::class)

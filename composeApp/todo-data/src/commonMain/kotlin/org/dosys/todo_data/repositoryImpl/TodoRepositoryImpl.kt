@@ -1,11 +1,11 @@
-package com.samsung.weather_data.repositoryImpl
+package org.dosys.todo_data.repositoryImpl
 
-import com.samsung.weather_data.local.TodoDao
-import com.samsung.weather_data.local.mapper.TodoMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.dosys.weather_domain.model.Todo
-import org.dosys.weather_domain.repository.TodoRepository
+import org.dosys.todo_data.local.TodoDao
+import org.dosys.todo_data.local.TodoMapper
+import org.dosys.todo_domain.model.Todo
+import org.dosys.todo_domain.repository.TodoRepository
 
 internal class TodoRepositoryImpl(
     private val todoDao: TodoDao,

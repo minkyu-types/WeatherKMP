@@ -2,7 +2,7 @@ package org.dosys.weather_domain.usecase
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import org.dosys.weather_domain.base.BaseFlowUseCaseImpl
+import org.dosys.base_domain.BaseFlowUseCaseImpl
 import org.dosys.weather_domain.model.ExcludeType
 import org.dosys.weather_domain.model.WeathersFor5Days
 import org.dosys.weather_domain.repository.WeatherRepository
