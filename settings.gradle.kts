@@ -43,3 +43,6 @@ include(":composeApp:todo-domain")
 project(":composeApp:todo-domain").projectDir = file("composeApp/todo-domain")
 include(":composeApp:todo-data")
 project(":composeApp:todo-data").projectDir = file("composeApp/todo-data")
+
+include(":composeApp:base-domain")
+project(":composeApp:base-domain").projectDir = file("composeApp/base-domain")

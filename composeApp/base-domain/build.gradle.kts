@@ -11,8 +11,6 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                implementation(project(":composeApp:base-domain"))
-
                 implementation(libs.kotlinx.coroutines.core)
             }
         }

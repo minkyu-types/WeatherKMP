@@ -47,8 +47,11 @@ kotlin {
             api(abcNotifications)
         }
         commonMain.dependencies {
+            implementation(project(":composeApp:todo-data"))
+            implementation(project(":composeApp:todo-domain"))
             implementation(project(":composeApp:weather-data"))
             implementation(project(":composeApp:weather-domain"))
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
