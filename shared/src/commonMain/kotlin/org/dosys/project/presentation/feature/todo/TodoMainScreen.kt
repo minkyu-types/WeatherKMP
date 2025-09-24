@@ -66,13 +66,19 @@ fun TodoMainScreen(
     }
 }
 
+/**
+ * @author mkkim - 페이징 처리 된 리스트
+ */
 @Composable
 private fun PagedTodoList(
     todos: LazyPagingItems<TodoModel>,
     onItemEdited: (TodoModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier
+            .padding(vertical = 8.dp)
+    ) {
         items(todos.itemCount) { index ->
             val todo = todos[index]
             todo?.let {
@@ -85,6 +91,9 @@ private fun PagedTodoList(
     }
 }
 
+/**
+ * @author mkkim - 페이징 되지 않은 리스트
+ */
 @Composable
 private fun TodoList(
     todos: List<TodoModel>,

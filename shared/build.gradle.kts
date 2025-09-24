@@ -54,8 +54,6 @@ kotlin {
             implementation(libs.androidx.workmanager)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.json)
-            implementation(libs.androidx.paging3.compose)
-            implementation(libs.androidx.paging3.runtime)
             api(abcNotifications)
         }
         commonMain.dependencies {
@@ -73,6 +71,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.paging3.common)
+            implementation(libs.androidx.paging3.compose)
+            implementation(libs.androidx.paging3.runtime)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.koin.core)
