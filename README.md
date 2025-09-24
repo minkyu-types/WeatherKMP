@@ -18,7 +18,7 @@
 - Koin `3.6.4` + Ksp `2.2.0-2.0.2`
 - Coroutines `1.8.1`
 - Coil `3.3.0`
-- Kotlinx serialization + datetime
+- Kotlinx serialization, datetime
 - Kermit `2.0.4`
 - Ai assistant(Chat GPT 5 + Copilot)
 
