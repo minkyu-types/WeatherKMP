@@ -9,7 +9,10 @@ androidx-core = "1.16.0"
 androidx-espresso = "3.6.1"
 androidx-lifecycle = "2.9.1"
 androidx-testExt = "1.2.1"
+androidx-paging3 = "3.3.6"
+androidx-paging3-compose = "3.4.0-alpha04"
 composeMultiplatform = "1.8.2"
+compose-bom = "2025.08.00"
 junit = "4.13.2"
 kotlin = "2.2.0"
 orbit = "10.0.0"
@@ -28,11 +31,12 @@ sqlite = "2.6.0"
 workmanager = "2.9.0"
 nav3Core = "1.0.0-alpha01"
 lifecycleViewmodelNav3 = "1.0.0-alpha01"
-kotlinSerialization = "2.2.0"
+kotlinxSerialization = "2.2.0"
 serialization-json = "1.8.1"
 material3AdaptiveNav3 = "1.0.0-SNAPSHOT"
 lifecycle-ViewModel = "2.8.0-rc01"
 coil = "3.3.0"
+material3 = "1.4.0-rc01"
 kermit = "2.0.4"
 
 [libraries]
@@ -57,12 +61,17 @@ ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = 
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-serialization-kotlinx-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization-json" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle-ViewModel"}
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime"}
 kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref="material3" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
 koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
@@ -72,8 +81,12 @@ jetpack-navigation = { group = "org.jetbrains.androidx.navigation", name=  "navi
 ktorfit = { group = "de.jensklingenberg.ktorfit", name=  "ktorfit-lib", version.ref = "ktorfit"}
 ktorfit-compiler = { group = "de.jensklingenberg.ktorfit", name=  "ktorfit-ksp", version.ref = "ktorfit"}
 
+androidx-paging3-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging3" }
+androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging3" }
+androidx-paging3-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging3-compose" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
 
@@ -90,8 +103,9 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androidKmpLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 compose-resources = { id = "org.jetbrains.compose.resources", version.ref = "composeMultiplatform" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

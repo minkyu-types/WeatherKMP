@@ -34,15 +34,16 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp")
-include(":composeApp:weather-data")
-project(":composeApp:weather-data").projectDir = file("composeApp/weather-data")
-include(":composeApp:weather-domain")
-project(":composeApp:weather-domain").projectDir = file("composeApp/weather-domain")
-include(":composeApp:todo-domain")
-project(":composeApp:todo-domain").projectDir = file("composeApp/todo-domain")
-include(":composeApp:todo-data")
-project(":composeApp:todo-data").projectDir = file("composeApp/todo-data")
+include(":shared")
+include(":shared:weather-data")
+project(":shared:weather-data").projectDir = file("shared/weather-data")
+include(":shared:weather-domain")
+project(":shared:weather-domain").projectDir = file("shared/weather-domain")
+include(":shared:todo-domain")
+project(":shared:todo-domain").projectDir = file("shared/todo-domain")
+include(":shared:todo-data")
+project(":shared:todo-data").projectDir = file("shared/todo-data")
 
-include(":composeApp:base-domain")
-project(":composeApp:base-domain").projectDir = file("composeApp/base-domain")
+include(":shared:base-domain")
+project(":shared:base-domain").projectDir = file("shared/base-domain")
+include(":androidapp")
