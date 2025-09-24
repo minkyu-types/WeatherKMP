@@ -7,7 +7,7 @@
 - 리포지토리 구현체 바인딩을 위해 shared/androidMain, shared/iosMain에서 피쳐별 data 모듈에 의존성을 가지게 하여 의존성 주입만을 수행합니다.
 <img width="2265" height="1940" alt="Image" src="https://github.com/user-attachments/assets/8991f1fb-9a89-4650-ba25-8b5aae62f429" />
 
-### Tech stack
+### 사용 기술
 - Kotlin multiplatform + Compose multiplatform
 - Kotlin `2.2.0`
 - Jetpack Compose, Workmanager, Paging3, Room, Lifecycle
@@ -17,3 +17,18 @@
 - Coil `3.3.0`
 - Kotlinx serialization + datetime
 - Kermit `2.0.4`
+- Ai assistant(Chat GPT 5 + Copilot)
+
+### 주요 기능
+- 날씨
+  - Lat/Lon 값 기반 오늘 날씨 데이터 조회(openweather 무료 api)
+  - Lat/Lon 값 기반 3시간 간격으로 5일치 날씨 데이터 조회(openweather 무료 api)
+  - 사용자 위치의 날씨 정보 제공
+    - 일몰, 일출
+    - 바람, 돌풍, 방향
+    - 체감 온도
+    - 강수량(지난 1시간)
+    - 습도, 기압
+- 할 일
+  - 할 일 리스트 조회
+  - 할 일 추가/수정/삭제
