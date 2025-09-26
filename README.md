@@ -1,5 +1,5 @@
 
-# Kotlin Multi Platform
+# Kotlin MultiPlatform
 ### 공통
 - Room, Orbit, Koin, Paging3, Coil 등의 핵심 라이브러리들이 KMP를 지원하므로 호환성 관련 문제는 없었습니다.
 - 다만 빌드 퍼포먼스가 네이티브에 비해 많이 떨어지는 편이며, 트러블슈팅이 어렵다는 단점이 있었습니다.
@@ -16,7 +16,7 @@
 <img width="2265" height="1940" alt="Image" src="https://github.com/user-attachments/assets/8991f1fb-9a89-4650-ba25-8b5aae62f429" />
 
 ### 사용 기술
-- Kotlin multiplatform + Compose multiplatform
+- Kotlin MultiPlatform + Compose MultiPlatform
 - Kotlin `2.2.0`
 - Clean Architecture + MVI 패턴(Orbit 프레임워크 `10.0.0`)
 - Jetpack Compose, Workmanager, Paging3, Room, Lifecycle
